@@ -5,20 +5,17 @@ namespace L02_DavidsRotation {
   // window.addEventListener("click", sceneLoad);
 
   export let viewport: fc.Viewport;
-
   let root: fc.Node = new fc.Node("Root");
 
   function sceneLoad(_event: Event): void {
 
     const canvas: HTMLCanvasElement = document.querySelector("canvas");
-    fc.Debug.log(canvas);
-
+    //fc.Debug.log(canvas);
+    
     root.addComponent(new fc.ComponentTransform())
-
+    //test
+    
     let quad: fc.Node = new fc.Node("Quad");
-
-    root.addChild(quad)
-
     let meshQuad: fc.MeshQuad = new fc.MeshQuad();
     let cmpQuad: fc.ComponentMesh = new fc.ComponentMesh(meshQuad);
     quad.addComponent(cmpQuad);
@@ -26,6 +23,9 @@ namespace L02_DavidsRotation {
     let mtrSolidWhite: fc.Material = new fc.Material("SolidWhite", fc.ShaderUniColor, new fc.CoatColored(fc.Color.CSS("WHITE")));
     let cMaterial: fc.ComponentMaterial = new fc.ComponentMaterial(mtrSolidWhite);
     quad.addComponent(cMaterial);
+
+    root.addChild(quad)
+
 
     let torus: fc.Node = new fc.Node("Torus");
 
@@ -41,8 +41,7 @@ namespace L02_DavidsRotation {
     torus.addComponent(corange);
 
 
-
-    quad.appendChild(torus);
+    root.appendChild(torus);
 
     let cube: fc.Node = new fc.Node("Cube");
     let meshCube: fc.MeshCube = new fc.MeshCube();
@@ -56,23 +55,24 @@ namespace L02_DavidsRotation {
     torus.addComponent(corange);
     cube.addComponent(cmpCube);
     cube.addComponent(cred);
-    quad.appendChild(cube);
+    root.appendChild(cube);
 
+    
+    let cmpCamera: fc.ComponentCamera = new fc.ComponentCamera();
+    cmpCamera.pivot.translateZ(4);
+    cmpCamera.pivot.rotateY(180);
 
-    let cCamera: fc.ComponentCamera = new fc.ComponentCamera();
-    cCamera.pivot.translateZ(4);
-    cCamera.pivot.rotateY(180);
+    
+    viewport = new fc.Viewport();
+    viewport.initialize("Viewport", root, cmpCamera, canvas);
+    // fc.Debug.log(viewport);
 
     fc.Loop.addEventListener(fc.EVENT.LOOP_FRAME, hndLoop);
     fc.Loop.start(fc.LOOP_MODE.TIME_GAME, 30);
-
-    viewport = new fc.Viewport();
-    viewport.initialize("Viewport", root, cCamera, canvas);
-    fc.Debug.log(viewport);
   }
 
   function hndLoop(_event: Event): void{
-    console.log("tick");
+    console.log("Tick");
     //viewport.getGraph().getComponent(fc.ComponentTransform).local.rotateZ(1);
     //viewport.getGraph().cmpTransform.local.rotateZ(1);
     root.mtxLocal.rotateZ(1);
