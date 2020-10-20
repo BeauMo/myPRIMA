@@ -54,6 +54,7 @@ var L02_DavidsRotation;
         //viewport.getGraph().cmpTransform.local.rotateZ(1);
         root.mtxLocal.rotateZ(1);
         L02_DavidsRotation.viewport.draw();
+        //Test
     }
 })(L02_DavidsRotation || (L02_DavidsRotation = {}));
 //# sourceMappingURL=Main.js.map

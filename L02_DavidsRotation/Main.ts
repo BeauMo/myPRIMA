@@ -77,5 +77,6 @@ namespace L02_DavidsRotation {
     //viewport.getGraph().cmpTransform.local.rotateZ(1);
     root.mtxLocal.rotateZ(1);
     viewport.draw();
+    //Test
   }
 }
