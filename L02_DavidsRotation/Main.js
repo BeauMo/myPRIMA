@@ -6,9 +6,8 @@ var L02_DavidsRotation;
     let root = new fc.Node("Root");
     function sceneLoad(_event) {
         const canvas = document.querySelector("canvas");
-        //fc.Debug.log(canvas);
+        fc.Debug.log(canvas);
         root.addComponent(new fc.ComponentTransform());
-        //test
         let quad = new fc.Node("Quad");
         let meshQuad = new fc.MeshQuad();
         let cmpQuad = new fc.ComponentMesh(meshQuad);
@@ -54,7 +53,6 @@ var L02_DavidsRotation;
         //viewport.getGraph().cmpTransform.local.rotateZ(1);
         root.mtxLocal.rotateZ(1);
         L02_DavidsRotation.viewport.draw();
-        //Test
     }
 })(L02_DavidsRotation || (L02_DavidsRotation = {}));
 //# sourceMappingURL=Main.js.map

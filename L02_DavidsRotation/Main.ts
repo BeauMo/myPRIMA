@@ -10,10 +10,9 @@ namespace L02_DavidsRotation {
   function sceneLoad(_event: Event): void {
 
     const canvas: HTMLCanvasElement = document.querySelector("canvas");
-    //fc.Debug.log(canvas);
+    fc.Debug.log(canvas);
     
     root.addComponent(new fc.ComponentTransform())
-    //test
     
     let quad: fc.Node = new fc.Node("Quad");
     let meshQuad: fc.MeshQuad = new fc.MeshQuad();
@@ -77,6 +76,5 @@ namespace L02_DavidsRotation {
     //viewport.getGraph().cmpTransform.local.rotateZ(1);
     root.mtxLocal.rotateZ(1);
     viewport.draw();
-    //Test
   }
 }
