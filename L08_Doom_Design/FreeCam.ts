@@ -1,29 +1,33 @@
 namespace L08_Doom_Design {
-    import ƒ = FudgeCore;
+    import f = FudgeCore;
 
     export class FreeCam {
         
-        private cntKeyHorizontal: ƒ.Control;
-        private cntKeyVertical: ƒ.Control;
+        private ctrSpeedSide: f.Control;
+        private ctrSpeed: f.Control;
+        private ctrRotation: f.Control;
 
         public cmpCamera;
-        private avatar: ƒ.Node;
-
-        private avatarVelocity: ƒ.Vector3;
+        public avatar: f.Node;
         
-        public constructor(avatar: ƒ.Node){
+        // private ctrRotationBuffer: number;
+
+        private avatarVelocity: f.Vector3;
+        
+        public constructor(avatar: f.Node){
             
-            this.cntKeyHorizontal = new ƒ.Control("Keyboard", 1, ƒ.CONTROL_TYPE.PROPORTIONAL, true);
-            this.cntKeyVertical = new ƒ.Control("Keyboard", 4, ƒ.CONTROL_TYPE.PROPORTIONAL, true);
+            this.ctrSpeedSide = new f.Control("AvatarSpeedSide", 8, f.CONTROL_TYPE.PROPORTIONAL, true);
+            this.ctrSpeed = new f.Control("AvatarSpeed", 8, f.CONTROL_TYPE.PROPORTIONAL, true);
+            this.ctrRotation = new f.Control("AvatarRotation", -0.1, f.CONTROL_TYPE.PROPORTIONAL);
 
             this.avatar = avatar;
-            this.cmpCamera = new ƒ.ComponentCamera();
+            this.cmpCamera = new f.ComponentCamera();
 
-            this.avatar.addComponent(new ƒ.ComponentTransform());
+            this.avatar.addComponent(new f.ComponentTransform());
 
             this.cmpCamera.pivot.translateY(1.5);
             this.cmpCamera.pivot.rotateY(180);
-            this.cmpCamera.backgroundColor = ƒ.Color.CSS("darkblue");
+            this.cmpCamera.backgroundColor = f.Color.CSS("darkblue");
 
             this.avatar.addComponent(this.cmpCamera);
 
@@ -37,32 +41,37 @@ namespace L08_Doom_Design {
         
         // }
 
-        public hndKeyboardControls(): void {
-            this.cntKeyVertical.setInput(
-                ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP])
-              + ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN])
-            );
-            this.cntKeyHorizontal.setInput(
-                ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT])
-              + ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT])
-            );
+        public hndMouse = (_event: MouseEvent): void => {
+            // console.log(_event.movementX, _event.movementY);
+            // this.ctrRotationBuffer = this.ctrRotation.getOutput();
+            // console.log(this);
+            this.ctrRotation.setInput(_event.movementX);
+        }
 
-            this.avatarVelocity = ƒ.Vector3.Z(-this.cntKeyVertical.getOutput());
-            let frameTime: number = ƒ.Loop.timeFrameGame / 1000;
+        public hndControls(): void {
+            this.ctrSpeed.setInput(
+                f.Keyboard.mapToValue(1, 0, [f.KEYBOARD_CODE.W, f.KEYBOARD_CODE.ARROW_UP])
+              + f.Keyboard.mapToValue(-1, 0, [f.KEYBOARD_CODE.S, f.KEYBOARD_CODE.ARROW_DOWN])
+            );
+            this.ctrSpeedSide.setInput(
+                f.Keyboard.mapToValue(1, 0, [f.KEYBOARD_CODE.A, f.KEYBOARD_CODE.ARROW_LEFT])
+              + f.Keyboard.mapToValue(-1, 0, [f.KEYBOARD_CODE.D, f.KEYBOARD_CODE.ARROW_RIGHT])
+            );
+            
+            // if(this.ctrRotationBuffer != this.ctrRotation.getOutput())
+            this.avatar.mtxLocal.rotateY(this.ctrRotation.getOutput());
+            this.ctrRotation.setInput(0);
 
-            let distance: ƒ.Vector3 = ƒ.Vector3.SCALE(this.avatarVelocity, frameTime);
+            this.avatarVelocity = new f.Vector3(-this.ctrSpeedSide.getOutput(), 0, -this.ctrSpeed.getOutput());
+            let frameTime: number = f.Loop.timeFrameGame / 1000;
+
+            let distance: f.Vector3 = f.Vector3.SCALE(this.avatarVelocity, frameTime);
             this.translate(distance);
-            this.rotate(this.cntKeyHorizontal.getOutput());
         }
 
-        // For und Zurücklaufen 
-        private translate(_distance: ƒ.Vector3): void {
+        // Laufen
+        private translate(_distance: f.Vector3): void {
             this.avatar.mtxLocal.translate(_distance);
-        }
-
-        // drehen 
-        private rotate(_degree: number): void {
-            this.avatar.mtxLocal.rotateY(_degree);
         }
     }
 }
